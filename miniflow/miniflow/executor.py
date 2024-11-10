@@ -15,6 +15,7 @@ class Executor:
         for varaible, varaible_val in feed_dict.items():
             node_to_val_map[varaible] = varaible_val
 
+        # start: copy from [GPT]
         # Now you have the value of the input nodes(feed_dict) and computation graph(self.graph)
         # TODO:Traverse graph in topological order and compute values for all nodes,write you code below
         # 根据计算图计算
@@ -31,6 +32,7 @@ class Executor:
 
         # return the val of each node
         return [node_to_val_map[node] for node in self.eval_node_list]
+        # end: copy from [GPT]
 
 
 def gradient(output_node: Node, node_list: List[Node]) -> List[Node]:
@@ -52,6 +54,7 @@ def gradient(output_node: Node, node_list: List[Node]) -> List[Node]:
     for node in reverse_topo_order:
         # pass
         # 把节点对应的梯度节点相加
+        # start: copy from [GPT]
         #TODO: Sum the adjoints from all output nodes(hint: use sum_node_list)
         output_grad = node_to_output_grads_list.get(node, [])
         if len(output_grad) >= 2:
@@ -71,6 +74,7 @@ def gradient(output_node: Node, node_list: List[Node]) -> List[Node]:
                 node_to_output_grads_list[input_node] = []
             # 添加梯度
             node_to_output_grads_list[input_node].append(input_grads_nodes[i])
+        # end: copy from [GPT]
 
     # return the gradient of each node in node_list
     return [node_to_output_grad[node] for node in node_list]
