@@ -1,6 +1,6 @@
 from typing import List
 import numpy as np
-from node import Node
+from .node import Node
 
 
 class Op:  # abstract class, you should inherit this class to implement your own operator
@@ -149,7 +149,7 @@ class ZeroLikeOp(Op):
 class MatMulOp(Op):
     def __call__(self, node_A, node_B, trans_A=False, trans_B=False):
         new_node = Op.__call__(self)
-        new_node.name = f"{node_A.name} MatMal {node_B.name}"
+        new_node.name = f"({node_A.name} MatMal {node_B.name})"
         new_node.trans_A = trans_A  # A or A^T
         new_node.trans_B = trans_B  # B or B^T
         new_node.inputs = [node_A, node_B]
@@ -162,6 +162,10 @@ class MatMulOp(Op):
         # and return the result
         # TODO: Write your code below
         # pass
+        if val_a.shape == (1, 1):
+            return val_a.item() * val_b
+        if val_b.shape == (1, 1):
+            return val_b.item() * val_a
         # start: copy from [GPT]
         if node.trans_A:
             val_a = val_a.T
@@ -183,7 +187,7 @@ class MatMulOp(Op):
         # pass
         # start: copy from [GPT]
         grad_a = matmul_op(output_grad, node.inputs[1], trans_A=False, trans_B=True)
-        grad_b = matmul_op(node.inputs[0], output_grad , trans_A=True, trans_B=False)
+        grad_b = matmul_op(node.inputs[0], output_grad, trans_A=True, trans_B=False)
         return [grad_a, grad_b]
         # end: copy from [GPT]
 

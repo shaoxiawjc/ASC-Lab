@@ -1,4 +1,4 @@
-from op import *
+from .op import *
 from typing import Dict
 
 
@@ -70,11 +70,19 @@ def gradient(output_node: Node, node_list: List[Node]) -> List[Node]:
 
         #TODO: Traverse the inputs of node and add the partial adjoints to the list
         for i, input_node in enumerate(node.inputs):
-            if input_node not in node_to_output_grads_list:
-                node_to_output_grads_list[input_node] = []
+            if node.inputs[i] not in node_to_output_grads_list:
+                node_to_output_grads_list[node.inputs[i]] = []
             # 添加梯度
             node_to_output_grads_list[input_node].append(input_grads_nodes[i])
         # end: copy from [GPT]
+
+        output_grad = node_to_output_grads_list.get(node, [])
+        if len(output_grad) >= 2:
+            node_to_output_grad[node] = sum_node_list(output_grad)
+        elif len(output_grad) == 1:
+            node_to_output_grad[node] = output_grad[0]
+        else:
+            node_to_output_grad[node] = None
 
     # return the gradient of each node in node_list
     return [node_to_output_grad[node] for node in node_list]
