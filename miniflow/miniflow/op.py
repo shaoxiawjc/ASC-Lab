@@ -175,9 +175,6 @@ class MatMulOp(Op):
 
         return np.dot(val_a, val_b)
 
-
-        
-
     def gradient(self, node, output_grad) -> List[Node]:
         #  Y = A B => dA = dY B^T, dB = A^T dY
         #  According to the formula above, you should cal grad_a and grad_b
